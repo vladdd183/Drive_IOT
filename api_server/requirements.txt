@@ -1,0 +1,8 @@
+blacksheep
+rich
+uvicorn
+piccolo[postgres]
+piccolo_admin
+pydantic_settings
+pyjwt
+paho-mqtt

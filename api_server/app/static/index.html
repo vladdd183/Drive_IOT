@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Example</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <table id="engineTable" border="1">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Is Running</th>
+        <th>Speed</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <script>
+    // Подключение к WebSocket серверу
+    const socket = new WebSocket('ws://127.0.0.1:8000/api/info'); // Замените на адрес вашего WebSocket сервера
+
+    // Получаем таблицу из HTML
+    const tableBody = document.getElementById('engineTable').getElementsByTagName('tbody')[0];
+
+    // Обработка сообщений от WebSocket сервера
+    socket.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+
+      // Определяем строку по имени движка (Name)
+      let row = document.querySelector(`#engineTable tbody tr[data-name="${data.name}"]`);
+
+      if (data.message === 'Drive created') {
+        // Если сообщение Drive created и строки еще нет, создаем новую строку
+        if (!row) {
+          row = tableBody.insertRow();
+          row.setAttribute('data-name', data.name);
+          row.insertCell(0).textContent = data.name;
+          row.insertCell(1).textContent = data.is_running;
+          row.insertCell(2).textContent = data.speed;
+          row.insertCell(3).textContent = data.message;
+        }
+      } else if (data.message === 'Drive deleted') {
+        // Если сообщение Drive deleted, удаляем строку
+        if (row) {
+          tableBody.removeChild(row);
+        }
+      } else {
+        // В других случаях обновляем информацию в существующей строке
+        if (row) {
+          row.cells[1].textContent = data.is_running;
+          row.cells[2].textContent = data.speed;
+          row.cells[3].textContent = data.message;
+        }
+      }
+    };
+
+    // Обработка ошибок WebSocket соединения
+    socket.onerror = function(error) {
+      console.error('WebSocket Error: ', error);
+    };
+
+    // Обработка закрытия WebSocket соединения
+    socket.onclose = function(event) {
+      if (event.wasClean) {
+        console.log(`Closed cleanly, code=${event.code}, reason=${event.reason}`);
+      } else {
+        console.error('Connection died');
+      }
+    };
+
+  </script>
+</body>
+</html>
