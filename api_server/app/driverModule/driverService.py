@@ -50,14 +50,14 @@ class ElectricalDrive:
             "speed": self.speed,
         }
         if initial:
-            payload['message'] = 'Drive created'
+            payload['message'] = 'Привод создан'
         elif deleted:
-            payload['message'] = 'Drive deleted'
+            payload['message'] = 'Привод удален'
         else:
             if not self.is_running and self.speed == 0.0:
-                payload['message'] = 'Drive stopped and switched off'
+                payload['message'] = 'Привод остановлен и выключен'
             elif self.is_running:
-                payload['message'] = 'Drive running'
+                payload['message'] = 'Привод работает'
 
         payload_b = json.dumps(payload, indent=2).encode('utf-8')
         self.client.publish(self.topic, payload_b, qos=1)
@@ -74,14 +74,14 @@ class DriveManager:
 
     def create_drive(self, drive_name: str) -> ElectricalDrive:
         if drive_name in self.drives:
-            raise HTTPException(400, f"Drive {drive_name} already exists")
+            raise HTTPException(400, f"Привод {drive_name} уже существует")
         drive = ElectricalDrive(drive_name)
         self.drives[drive_name] = drive
         return drive
 
     def delete_drive(self, drive_name: str) -> bool:
         if drive_name not in self.drives:
-            raise HTTPException(404, f"Drive {drive_name} not found")
+            raise HTTPException(404, f"Привод {drive_name} не найден")
         drive = self.drives[drive_name]
         drive.publish_state(deleted=True)
         del self.drives[drive_name]
@@ -89,7 +89,7 @@ class DriveManager:
 
     async def change_drive_state(self, drive_name: str, is_running: bool, speed: float = None):
         if drive_name not in self.drives:
-            raise HTTPException(404, f"Drive {drive_name} not found")
+            raise HTTPException(404, f"Привод {drive_name} не найден")
         drive = self.drives[drive_name]
         if is_running:
             drive.is_running = True
@@ -103,7 +103,7 @@ class DriveManager:
 
     def get_drive(self, drive_name: str) -> ElectricalDrive:
         if drive_name not in self.drives:
-            raise HTTPException(404, f"Drive {drive_name} not found")
+            raise HTTPException(404, f"Привод {drive_name} не найден")
         return self.drives[drive_name]
 
     def list_drives(self) -> List[str]:
