@@ -19,5 +19,5 @@ class UserBehavior(TaskSet):
 
 class WebsiteUser(HttpUser):
     tasks = [UserBehavior]
-    wait_time = between(0.1, 0.5)  # Время ожидания между запросами в секундах.
+    wait_time = between(0.1, 0.5)
 

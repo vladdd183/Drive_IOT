@@ -1,0 +1,36 @@
+@import './base.css';
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+#app {
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  background-color: rgb(130, 128, 201);
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  background: #009485;
+  padding: 15px;
+  font-size: 17px;
+  transition: 0.2s;
+  color: white;
+}
+
+button:hover {
+  background: #04786c;
+  transition: 0.2s;
+}
+button:disabled {
+  background: #5f6164;
+  transition: 0.2s;
+}
